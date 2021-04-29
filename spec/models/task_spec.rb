@@ -21,17 +21,17 @@ RSpec.describe Task, type: :model do
     end
 
     it 'is invalid with a duplicate title' do
-      create(:task)
-      task_with_duplicate_title = build(:task)
+      task = create(:task)
+      task_with_duplicate_title = build(:task, title: task.title)
       expect(task_with_duplicate_title).to be_invalid
       expect(task_with_duplicate_title.errors[:title]).to include("has already been taken")
     end
 
     it 'is valid with another title' do
       create(:task)
-      task_with_another_title = build(:task, title: 'hoge')
-      expect(task_valid_with_another_title).to be_valid
-      expect(task_valid_with_another_title.errors[:title]).to_not include("has already been taken")
+      task_with_another_title = build(:task)
+      expect(task_with_another_title).to be_valid
+      expect(task_with_another_title.errors[:title]).to_not include("has already been taken")
     end
   end
 end
