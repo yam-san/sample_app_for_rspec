@@ -52,9 +52,7 @@ RSpec.describe "Users", type: :system do
   end
 
   describe 'ログイン後' do
-    before do
-      login(user)
-    end
+    before { login(user) }
 
     describe 'ユーザー編集' do
       before do
@@ -87,8 +85,8 @@ RSpec.describe "Users", type: :system do
 
       context 'メールアドレスが既に使用されている' do
         it 'ユーザーの編集が失敗する' do
-          alt_user = create(:user)
-          fill_in 'Email', with: alt_user.email
+          other_user = create(:user)
+          fill_in 'Email', with: other_user.email
           fill_in 'Password', with: 'password'
           fill_in 'Password confirmation', with: 'password'
           click_button 'Update'
@@ -110,14 +108,14 @@ RSpec.describe "Users", type: :system do
     describe 'マイページ' do
       context 'タスク作成' do
         it '新規作成したタスクが表示される' do
-          visit root_path
-          click_link 'New task'
-          fill_in 'Title', with: 'title1'
-          fill_in 'Content', with: 'content1'
-          fill_in 'Deadline', with: 1.day.from_now
-          click_button 'Create Task'
-          expect(page).to have_content 'Task was successfully created.'
-          expect(page).to have_current_path task_path(1)
+          create(:task, title: 'test_title', status: :doing, user: user)
+          visit user_path(user)
+          expect(page).to have_content 'You have 1 task.'
+          expect(page).to have_content 'test_title'
+          expect(page).to have_content 'doing'
+          expect(page).to have_link 'Show'
+          expect(page).to have_link 'Edit'
+          expect(page).to have_link 'Destroy'
         end
       end
     end
