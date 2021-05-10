@@ -87,8 +87,8 @@ RSpec.describe "Users", type: :system do
 
       context 'メールアドレスが既に使用されている' do
         it 'ユーザーの編集が失敗する' do
-          create(:user)
-          fill_in 'Email', with: 'user_2@example.com'
+          alt_user = create(:user)
+          fill_in 'Email', with: alt_user.email
           fill_in 'Password', with: 'password'
           fill_in 'Password confirmation', with: 'password'
           click_button 'Update'
